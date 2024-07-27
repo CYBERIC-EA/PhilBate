@@ -23,6 +23,9 @@ def main():
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
 
+    if 'input' not in st.session_state:
+        st.session_state.input = ""
+
     user_input = st.text_input("You:", key="input")
 
     if st.button("Send"):
@@ -32,13 +35,13 @@ def main():
             st.session_state.chat_history.append(f"User: {user_input}")
             st.session_state.chat_history.append(f"Assistant: {response}")
 
-            for i in range(len(st.session_state.chat_history)):
-                if "User:" in st.session_state.chat_history[i]:
-                    st.markdown(f"**{st.session_state.chat_history[i]}**")
-                else:
-                    st.markdown(f"{st.session_state.chat_history[i]}")
-
             st.session_state.input = ""
+
+    for i in range(len(st.session_state.chat_history)):
+        if "User:" in st.session_state.chat_history[i]:
+            st.markdown(f"**{st.session_state.chat_history[i]}**")
+        else:
+            st.markdown(f"{st.session_state.chat_history[i]}")
 
 if __name__ == "__main__":
     main()
