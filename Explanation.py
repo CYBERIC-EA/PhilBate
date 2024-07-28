@@ -41,7 +41,7 @@ def process_pdf(pdf_file):
     return document_search
 
 # Initialize the document search with the PDF content
-document_search = process_pdf("path/to/your/pdf/file.pdf")
+document_search = process_pdf("Some Debates.pdf")
 
 # Define a function to interact with the model
 def generate_response(prompt_text, context=""):
