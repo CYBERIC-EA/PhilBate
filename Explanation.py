@@ -39,8 +39,5 @@ def main():
                 else:
                     st.markdown(f"{st.session_state.chat_history[i]}")
 
-            # Clear the input field
-            st.session_state.input = ""
-
 if __name__ == "__main__":
     main()
