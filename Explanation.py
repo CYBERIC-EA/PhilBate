@@ -1,22 +1,21 @@
-import google.generativeai as genai
 import streamlit as st
 from pypdf import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain_community.vectorstores import FAISS
-from langchain.chains.question_answering import load_qa_chain
-from langchain_community.llms.ollama import Ollama
+import faiss
+from sentence_transformers import SentenceTransformer
 from dotenv import load_dotenv
 import os
-from langchain_community.embeddings.ollama import OllamaEmbeddings
+import google.generativeai as genai
 
+# Load environment variables
 load_dotenv()
-def get_embedding_function():
-    embeddings = OllamaEmbeddings(model="nomic-embed-text")
-    return embeddings
 
 # Configure the Gemini model
 genai.configure(api_key=os.getenv("API_KEY_GEMINI"))
 model = genai.GenerativeModel('gemini-1.5-flash')
+
+# Initialize the SentenceTransformer model
+embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
 
 # Function to process the PDF and extract relevant content
 def process_pdf(pdf_file):
@@ -37,14 +36,25 @@ def process_pdf(pdf_file):
     )
     texts = text_splitter.split_text(raw_text)
 
-    # Embed documents using FAISS
-    embeddings = get_embedding_function()
-    document_search = FAISS.from_texts(texts, embeddings)
+    # Embed documents using SentenceTransformer
+    embeddings = embedding_model.encode(texts, convert_to_tensor=False)
+    
+    # Create FAISS index
+    index = faiss.IndexFlatL2(embeddings.shape[1])
+    index.add(embeddings)
 
-    return document_search
+    return index, texts
 
 # Initialize the document search with the PDF content
-document_search = process_pdf("Some Debates.pdf")
+pdf_file = "Some Debates.pdf"
+document_index, texts = process_pdf(pdf_file)
+
+# Function to search for similar documents
+def similarity_search(query, index, texts, k=5):
+    query_embedding = embedding_model.encode([query], convert_to_tensor=False)
+    distances, indices = index.search(query_embedding, k)
+    results = [texts[i] for i in indices[0]]
+    return results
 
 # Define a function to interact with the model
 def generate_response(prompt_text, context=""):
@@ -65,8 +75,8 @@ def main():
         context = "\n".join(st.session_state.chat_history)
         
         # Get relevant content from the PDF based on the query
-        docs = document_search.similarity_search(user_input)
-        pdf_content = " ".join([doc.page_content for doc in docs])
+        docs = similarity_search(user_input, document_index, texts)
+        pdf_content = " ".join(docs)
 
         # Generate response
         response = generate_response(user_input, pdf_content)
