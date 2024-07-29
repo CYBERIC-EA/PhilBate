@@ -8,8 +8,12 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain_community.llms.ollama import Ollama
 from dotenv import load_dotenv
 import os
+from langchain_community.embeddings.ollama import OllamaEmbeddings
 
 load_dotenv()
+def get_embedding_function():
+    embeddings = OllamaEmbeddings(model="nomic-embed-text")
+    return embeddings
 
 # Configure the Gemini model
 genai.configure(api_key=os.getenv("API_KEY_GEMINI"))
