@@ -3,7 +3,6 @@ import streamlit as st
 from pypdf import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from get_embedding_function import get_embedding_function
 from langchain.chains.question_answering import load_qa_chain
 from langchain_community.llms.ollama import Ollama
 from dotenv import load_dotenv
