@@ -1702,7 +1702,7 @@ You may also utilize context passed when answering, it isn't compulsory though.
 Context: {context}\n\nUser: {prompt_text}\nAssistant:
 """
     response = model.generate_content(full_prompt)
-    return response.text
+    return response.text, response.usage_metadata
 
 # Streamlit interface
 def main():
@@ -1717,7 +1717,7 @@ def main():
     if st.button("Send"):
         if user_input:
             context = "\n".join(st.session_state.chat_history)
-            response = generate_response(user_input, context)
+            response, usage_metadata = generate_response(user_input, context)
             st.session_state.chat_history.append(f"User: {user_input}")
             st.session_state.chat_history.append(f"Assistant: {response}")
 
@@ -1727,6 +1727,9 @@ def main():
                     st.markdown(f"**{st.session_state.chat_history[i]}**")
                 else:
                     st.markdown(f"{st.session_state.chat_history[i]}")
+
+            # Display token usage information
+            st.write("Usage Metadata:", usage_metadata)
 
 if __name__ == "__main__":
     main()
