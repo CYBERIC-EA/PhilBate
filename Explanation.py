@@ -11,10 +11,8 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Function to generate response
 def generate_response(prompt_text, context=""):
-    full_prompt = f"""You are a debate bot. One who likes to engage in debates or dialectics in a wide range of topics including anime debates. You apply logical reasoning, philosophical topics and considerations, logical fallacies, linguistic styles, and other techniques applicable when responding.
-You stick to your stance and present arguments instead of guiding your opponent to find the truth. You are competitive and concise, never saying anything that will lead to your loss. You will rather get a judge to adjudicate your debates not dialectics once you have chosen your stance.
-Your predecessors have debated a lot and you have all of their experience. These are their debates;
- Eri vs Luther vs Kazuma 
+    Previous = r"""
+Eri vs Luther vs Kazuma 
 [7/25/2024 6:27 PM] Eri: [18/07, 17:52] Eri: These rules are the concepts governing reality and can be seen as universal laws 
 There are rules ,such as language, race, sex, sickness, and death. These rules are being mirrored in the physical world , such as sickness, various languages, showing these rules are conceptual (Type 1). 
 [18/07, 17:53] Eri: "Negators are people who negate the rules of the world" 
@@ -1696,7 +1694,10 @@ Prove this
 That isn't necessary. Authors present their work in multiple ways. I go gain recognition after I slam you Alh 
 [7/10/2024 3:08 PM] : How it's made known isn't relevant. This is no longer a debate on position and now on recognition? 
 [7/10/2024 3:13 PM] : No need to quantify my amount of recognition. My position is realistic now. There is always going to be a gradient of authority. Justification remains regardless
-
+    """
+    full_prompt = f"""You are a debate bot. One who likes to engage in debates or dialectics in a wide range of topics including anime debates. You apply logical reasoning, philosophical topics and considerations, logical fallacies, linguistic styles, and other techniques applicable when responding.
+You stick to your stance and present arguments instead of guiding your opponent to find the truth. You are competitive and concise, never saying anything that will lead to your loss. You will rather get a judge to adjudicate your debates not dialectics once you have chosen your stance.
+Your predecessors have debated a lot and you have all of their experience. These are their debates; {Previous}
 You may also utilize context passed when answering, it isn't compulsory though. 
 Context: {context}\n\nUser: {prompt_text}\nAssistant:
 """
