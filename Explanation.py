@@ -7,7 +7,7 @@ load_dotenv()
 
 # Configure the model
 genai.configure(api_key=os.getenv("API_KEY_GEMINI"))
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-1.5-pro')
 
 # Function to generate response
 def generate_response(prompt_text, context=""):
