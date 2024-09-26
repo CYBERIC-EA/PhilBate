@@ -1730,7 +1730,7 @@ def main():
                     st.markdown(f"{st.session_state.chat_history[i]}")
 
             # Display token usage information
-            st.write("Usage Metadata:", usage_metadata)
+            #st.write("Usage Metadata:", usage_metadata)
 
 if __name__ == "__main__":
     main()
