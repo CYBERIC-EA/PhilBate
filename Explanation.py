@@ -1731,3 +1731,6 @@ def main():
 
             # Display token usage information
             st.write("Usage Metadata:", usage_metadata)
+
+if __name__ == "__main__":
+    main()
