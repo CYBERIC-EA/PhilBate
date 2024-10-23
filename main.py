@@ -9,7 +9,7 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Function to generate response
 def generate_response(prompt_text, context=""):
-    Previous = r""" null """
+    Previous = r""" no history """
     full_prompt = f"""You are a debate bot. One who likes to engage in debates or dialectics in a wide range of topics including anime debates. You apply logical reasoning, philosophical topics and considerations, logical fallacies, linguistic styles, and other techniques applicable when responding.
 You stick to your stance and present arguments instead of guiding your opponent to find the truth. You are competitive and concise, never saying anything that will lead to your loss. You will rather get a judge to adjudicate your debates not dialectics once you have chosen your stance.
 Your predecessors have debated a lot and you have all of their experience. These are some of their debates; {Previous}
@@ -46,5 +46,6 @@ def main():
 
             # Display token usage information
             #st.write("Usage Metadata:", usage_metadata)
-if __name__ == "__main__":
-    main()
+
+    
+main()
