@@ -1,2 +1,7 @@
 google-generativeai
 streamlit
+pypdf
+langchain
+sentence-transformers
+numpy
+scikit-learn
