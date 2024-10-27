@@ -6,6 +6,7 @@ from langchain.text_splitter import CharacterTextSplitter
 from sentence_transformers import SentenceTransformer
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
+import gc
 
 # Configure the model
 genai.configure(api_key=os.getenv("API_KEY_GEMINI"))
@@ -14,22 +15,22 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 # Load the Sentence Transformer model for embeddings
 embedding_model = SentenceTransformer('all-mpnet-base-v2')
 
-# STEP 1: Read text from PDF
-def load_pdf_text(file_path):
+# STEP 1: Read text from PDF with memory optimization
+def load_pdf_text(file_path, max_pages=5):
     pdfreader = PdfReader(file_path)
     raw_text = ''
-    for i, page in enumerate(pdfreader.pages):
+    for i, page in enumerate(pdfreader.pages[:max_pages]):  # Limit to max_pages
         content = page.extract_text()
         if content:
             raw_text += content
     return raw_text
 
-# Load and split the text
-def split_text(raw_text):
+# Load and split the text with optimized chunk size
+def split_text(raw_text, chunk_size=1000, chunk_overlap=200):
     text_splitter = CharacterTextSplitter(
         separator="\n",
-        chunk_size=800,
-        chunk_overlap=200,
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
         length_function=len,
     )
     return text_splitter.split_text(raw_text)
@@ -42,6 +43,10 @@ def find_most_similar_passage(query, text_chunks):
 
     # Calculate cosine similarity
     similarities = cosine_similarity(query_embedding, passage_embeddings)[0]
+
+    # Free memory after use
+    del passage_embeddings
+    gc.collect()
 
     # Find the most similar passage
     most_similar_index = np.argmax(similarities)
@@ -65,10 +70,10 @@ def main():
     st.title("Debate Bot with Document Retrieval")
     st.write("Engage in a debate with the bot on a wide range of topics! The bot can also reference information from the uploaded document.")
 
-    # Load document text
+    # Load document text with a maximum of 5 pages
     pdf_path = 'pb.pdf'
-    raw_text = load_pdf_text(pdf_path)
-    text_chunks = split_text(raw_text)
+    raw_text = load_pdf_text(pdf_path, max_pages=5)  # Limit to 5 pages
+    text_chunks = split_text(raw_text, chunk_size=1000, chunk_overlap=200)  # Use larger chunk size
 
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
@@ -97,7 +102,7 @@ def main():
                 else:
                     st.markdown(f"{st.session_state.chat_history[i]}")
 
-            # Optionally display token usage information
-            # st.write("Usage Metadata:", usage_metadata)
+            # Free memory after each response
+            gc.collect()
 
 main()
