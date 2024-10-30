@@ -55,7 +55,7 @@ def find_most_similar_passage(query, text_chunks):
     return most_similar_passage, similarities[most_similar_index]
 
 # Function to generate response
-def generate_response(prompt_text, most_relevant_passage, context=""):
+def generate_response(user_input, most_relevant_passage, context=" " ):
     full_prompt = f"""
         You are a versatile AI assistant with a dual purpose:
         1. **Conversational Mode**: Engage in polite and helpful responses to general questions and casual exchanges.
@@ -66,9 +66,9 @@ def generate_response(prompt_text, most_relevant_passage, context=""):
         - **For Debate or Argumentative Inputs**: Present a clear stance and logical argumentation, avoiding neutral or vague statements.
 
         ### Contextual Information:
-        Use the following passage for any supporting information in your response if relevant: {relevant_passage}
+        Use the following passage for any supporting information in your response if relevant: {most_relevant_passage}
 
-        ### Prior Response (if any): {previous_response}
+        ### Prior Response (if any): {context}
 
         User: {user_input}
         Assistant:
