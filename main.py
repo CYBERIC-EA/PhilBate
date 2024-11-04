@@ -9,7 +9,7 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 # Function to generate response with competitive debate prompt
 def generate_response(user_input):
     # Enhanced prompt for a competitive, austere debate assistant
-    prompt = """
+    prompt = f"""
 You are a highly competitive and austere debate assistant. Your goal is to win every debate through rigorous logic, unyielding conviction, and sophisticated linguistic prowess. Based on user input, adjust your tone accordingly:
 
 1. **Conversational Mode**: If the user’s input is casual or general, respond with a succinct, direct answer without elaboration or debate.
