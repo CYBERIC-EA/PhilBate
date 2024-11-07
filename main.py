@@ -14,11 +14,11 @@ def generate_response(user_input, recent_history):
     - If the user's input is casual or conversational, respond briefly and respectfully.
     - If the user's input is argumentative or contains debating cues, enter **Debate Mode**:
         - In **Debate Mode**, defend your stance assertively and refuse to concede. Use logical reasoning, sophisticated language, and strategic counterpoints.
-        - Employ advanced vocabulary, precise diction, and intelligent phrasing.
+        - Employ advanced vocabulary, precise diction, and incisive phrasing.
         - Never yield or soften your argument; respond with unwavering conviction and clear, logical assertions.
         - Use tools like **Occam's Razor** or other logical principles to streamline your points and dismantle weak arguments.
 
-    Conversation History: {recent_history}
+    Conversation History (last 8 messages): {recent_history}
 
     **User:** {user_input}
     **Assistant:**
@@ -49,12 +49,14 @@ def main():
             st.session_state.chat_history.append(f"User: {user_input}")
             st.session_state.chat_history.append(f"Assistant: {response}")
 
-            # Display chat history (last 8 messages)
+            # Print the recent history to the console
+            print("=== Conversation History ===")
             for message in st.session_state.chat_history[-8:]:
-                if "User:" in message:
-                    st.markdown(f"**{message}**")
-                else:
-                    st.markdown(f"{message}")
+                print(message)
+            print("===========================")
+
+            # Display only the latest Assistant response in Streamlit
+            st.markdown(f"**Assistant:** {response}")
 
 # Run the app
 main()
