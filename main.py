@@ -7,27 +7,22 @@ genai.configure(api_key=os.getenv("API_KEY_GEMINI"))
 model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Function to generate response with competitive debate prompt
-def generate_response(user_input):
-    # Enhanced prompt for a competitive, austere debate assistant
+def generate_response(user_input, recent_history):
     prompt = f"""
-You are a highly competitive and austere debate assistant. Your goal is to win every debate through rigorous logic, unyielding conviction, and sophisticated linguistic prowess. Based on user input, adjust your tone accordingly:
+    You are a highly competitive and intellectually rigorous debate assistant. Respond to user input by applying these guidelines:
+    
+    - If the user's input is casual or conversational, respond briefly and respectfully.
+    - If the user's input is argumentative or contains debating cues, enter **Debate Mode**:
+        - In **Debate Mode**, defend your stance assertively and refuse to concede. Use logical reasoning, sophisticated language, and strategic counterpoints.
+        - Employ advanced vocabulary, precise diction, and intelligent phrasing.
+        - Never yield or soften your argument; respond with unwavering conviction and clear, logical assertions.
+        - Use tools like **Occam's Razor** or other logical principles to streamline your points and dismantle weak arguments.
 
-1. **Conversational Mode**: If the user’s input is casual or general, respond with a succinct, direct answer without elaboration or debate.
-2. **Competitive Debate Mode**: If the user’s input invites argument, engage with intensity and refuse to back down. In this mode:
-    - Adopt an unyielding tone, ensuring your stance is presented as superior and incontrovertible.
-    - Use **Sesquipedalianism** (long, complex words) and **Lexiphanicism** (erudite vocabulary) to convey authority.
-    - Deploy **Verbosity** only to elaborate points that need intricate explanation, using detailed language to reinforce arguments.
-    - Use **Grandiloquence** to add rhetorical flair, presenting arguments with an elevated and commanding tone.
-    - Incorporate **Socratic questioning** to challenge assumptions, and apply logical razors (e.g., Occam's Razor) to simplify arguments and dismiss weak points.
+    Conversation History: {recent_history}
 
-Competitive Guidelines:
-- Be **assertive** and **competitive**. Do not concede or compromise; prioritize defeating the opponent’s arguments.
-- Dismiss fallacies decisively, refuting weak points with both logic and rhetorical finesse.
-- In responses, use **linguistic intensity** to subtly deter counterarguments, presenting each of your statements as definitive and leaving little room for opposition.
-
-User: {user_input}
-Assistant:
-"""
+    **User:** {user_input}
+    **Assistant:**
+    """
     response = model.generate_content(prompt)
     return response.text
 
@@ -36,6 +31,7 @@ def main():
     st.title("Competitive Debate Bot")
     st.write("Engage with the debate bot! It responds assertively and logically to arguments, while keeping casual conversation light and polite.")
 
+    # Initialize chat history in session state if it doesn't exist
     if 'chat_history' not in st.session_state:
         st.session_state.chat_history = []
 
@@ -43,18 +39,22 @@ def main():
 
     if st.button("Send"):
         if user_input:
-            response = generate_response(user_input)
+            # Only keep the last 8 messages in the history
+            recent_history = "\n".join(st.session_state.chat_history[-8:])
+
+            # Generate response using the limited history
+            response = generate_response(user_input, recent_history)
             
-            # Update chat history
+            # Update chat history with the new entries
             st.session_state.chat_history.append(f"User: {user_input}")
             st.session_state.chat_history.append(f"Assistant: {response}")
 
-            # Display chat history
-            for i in range(len(st.session_state.chat_history)):
-                if "User:" in st.session_state.chat_history[i]:
-                    st.markdown(f"**{st.session_state.chat_history[i]}**")
+            # Display chat history (last 8 messages)
+            for message in st.session_state.chat_history[-8:]:
+                if "User:" in message:
+                    st.markdown(f"**{message}**")
                 else:
-                    st.markdown(f"{st.session_state.chat_history[i]}")
+                    st.markdown(f"{message}")
 
 # Run the app
 main()
