@@ -2,6 +2,5 @@ pypdf
 langchain
 sentence-transformers
 numpy
-scikit-learn
+pydantic
 google-generativeai
-streamlit
