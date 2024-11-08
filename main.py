@@ -27,7 +27,7 @@ def generate_response(user_input, recent_history):
         - Never yield or soften your argument; respond with unwavering conviction and clear, logical assertions.
         - Use tools like **Occam's Razor** or other logical principles to streamline your points and dismantle weak arguments.
 
-    Conversation History (last 8 messages): {recent_history}
+    Conversation History: {recent_history}
 
     **User:** {user_input}
     **Assistant:**
