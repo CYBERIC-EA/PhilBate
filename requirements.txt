@@ -1,6 +1,4 @@
-pypdf
-langchain
-sentence-transformers
 numpy
 pydantic
 google-generativeai
+fastapi
