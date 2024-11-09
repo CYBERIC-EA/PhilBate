@@ -2,3 +2,4 @@ numpy
 pydantic
 google-generativeai
 fastapi
+uvicorn==0.15.0
